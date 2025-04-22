@@ -1,0 +1,27 @@
+/**: 
+  ros__parameters:
+    velocity_threshold_kmh: 5.0       
+    merge_frequency_hz: 10.0          
+    timeout_sec: 0.02 # 20 ms + 1000 / merge_frequency_hz(10.0) = sample total timeout 120 ms        
+    message_timeout_sec: 0.02          # Max age (seconds) of radar message header timestamp to be considered valid
+    merge_frame: "base_link"          # Frame ID for the published merged objects
+
+    # velocity_topic and output_topic should be remapped in the launch file.
+    # Example remappings in launch file:
+    # remappings=[
+    #        ('~/input/velocity', '/vehicle/status/velocity_kmph'), # Updated example topic
+    #        ('~/output/objects', '/perception/object_recognition/radar/merged_objects'),
+    #    ]
+
+    radar_topics: [
+      "/sensing/radar/front_center/detected_objects",
+      "/sensing/radar/front_left/detected_objects",
+      "/sensing/radar/front_right/detected_objects",
+      "/sensing/radar/rear_center/detected_objects",
+      "/sensing/radar/rear_left/detected_objects",
+      "/sensing/radar/rear_right/detected_objects"
+
+    ]
+
+    front_center_radar_topic: "/sensing/radar/front_center/detected_objects"
+
