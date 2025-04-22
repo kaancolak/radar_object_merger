@@ -3,17 +3,16 @@
 
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp_components/register_node_macro.hpp>
-
 #include <autoware_perception_msgs/msg/detected_objects.hpp>
 #include <std_msgs/msg/float32.hpp>
 #include <rclcpp/time.hpp>
 #include <rclcpp/duration.hpp>
 #include <map>
-#include <memory>
 #include <string>
 #include <vector>
+#include <memory>
 #include <mutex>
-#include <chrono> // Added
+#include <chrono>
 
 namespace radar_object_merger
 {
@@ -32,7 +31,7 @@ private:
   void on_radar_input(const DetectedObjects::ConstSharedPtr msg, const std::string & topic_name);
 
   // Publisher
-  rclcpp::Publisher<DetectedObjects>::SharedPtr merged_objects_pub_;
+  rclcpp::Publisher<DetectedObjects>::SharedPtr objects_pub_;
 
   // Subscribers
   rclcpp::Subscription<Float32>::SharedPtr velocity_sub_;
@@ -40,31 +39,23 @@ private:
 
   // Parameters
   double velocity_threshold_kmph_;
+  double merge_frequency_hz_;
+  double message_timeout_sec_;
+  std::string merge_frame_;
   std::vector<std::string> radar_topics_;
   std::string front_center_radar_topic_;
-  double message_timeout_sec_;
-  std::string velocity_topic_;
-  std::string output_topic_;
-  std::string merge_frame_;
-  double merge_frequency_hz_; // Store frequency
-  std::chrono::nanoseconds merge_period_; // Store period
 
   // Internal state
   double current_velocity_kmph_ = 0.0;
-  std::map<std::string, DetectedObjects::ConstSharedPtr> latest_radar_objects_;
-  std::recursive_mutex data_mutex_; // Use recursive mutex for potential nested calls
+  std::map<std::string, DetectedObjects::ConstSharedPtr> radar_objects_;
+  std::recursive_mutex data_mutex_;
   rclcpp::Time last_merge_time_;
   rclcpp::Duration message_timeout_duration_;
-  bool use_timer_based_merge_ = true; // Flag to control merge strategy
+  bool merge_all_radars_ = true;
 
   // Timer for merging and publishing
   rclcpp::TimerBase::SharedPtr merge_timer_;
-  void merge_and_publish(); // Merge logic, called by timer or event
-
-  // Helper methods for timer management
-  void create_merge_timer();
-  void cancel_merge_timer();
-
+  void merge_and_publish();
 };
 
 }  // namespace radar_object_merger
