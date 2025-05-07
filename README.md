@@ -1,10 +1,10 @@
 # radar_object_merger
 
-A ROS2 component node for merging detected objects from multiple radar sources, with support for velocity-based switching between all-radar merging and event-based publishing from a front-center radar.
+A ROS 2 component node for merging detected objects from multiple radar sources. Supports velocity-based switching between all-radar merging and event-based publishing from a front-center radar.
 
 ## Features
 
-- Subscribes to multiple radar topics (list of `autoware_auto_perception_msgs/msg/DetectedObjects`).
+- Subscribes to multiple radar topics (`autoware_auto_perception_msgs/msg/DetectedObjects`).
 - Subscribes to a velocity topic (`std_msgs/msg/Float32`).
 - Publishes merged objects to `~/output/objects`.
 - Switches between merging all radars (low speed) and publishing only the front-center radar (high speed), based on a velocity threshold.
@@ -34,8 +34,8 @@ A ROS2 component node for merging detected objects from multiple radar sources, 
 
 ## Behavior
 
-- When velocity is below `velocity_threshold_kmph`, merges all radar topics and publishes at `merge_frequency_hz`.
-- When velocity is above the threshold, publishes only the front-center radar detections as they arrive.
+- **Low-speed mode:** When velocity is below `velocity_threshold_kmph`, merges all radar topics and publishes at `merge_frequency_hz`.
+- **High-speed mode:** When velocity is above the threshold, publishes only the front-center radar detections as they arrive.
 - Ignores radar messages older than `message_timeout_sec` relative to the last merge time.
 
 ## Usage Example
